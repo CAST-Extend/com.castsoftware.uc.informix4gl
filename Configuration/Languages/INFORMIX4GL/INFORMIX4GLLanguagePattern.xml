@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<languagePattern id="INFORMIX4GL">
+	<escape><![CDATA[\]]></escape>
+	
+	<comment>
+		<begin><![CDATA[[\{]\r\n]]></begin>
+		<end><![CDATA[[\}]\r\n]]></end>
+		<multiline>true</multiline>
+	</comment>	
+
+
+	<comment>
+		<begin><![CDATA[#]]></begin>
+		<end><![CDATA[\r\n]]></end>
+		<multiline>false</multiline>
+	</comment>	
+	
+	<string>
+		<begin><![CDATA["]]></begin>
+		<end><![CDATA["]]></end>
+		<escape><![CDATA[\]]></escape>
+	</string>
+	
+	<string>
+		<begin><![CDATA[']]></begin>
+		<end><![CDATA[']]></end>
+	</string>
+	
+	<keyword>FUNCTION</keyword>
+	<keyword>MAIN</keyword>
+	<keyword>MENU</keyword>
+	<keyword>SCREEN</keyword>
+
+<!--	<types>
+
+ 		<INFORMIX4GLFunction>
+			<header>
+				<pattern><![CDATA[(^| |\t)[fF][uU][nN][cC][tT][iI][oO][nN][ \t]+[[:alnum:]_]+[ \t]+[\(]]]></pattern>
+				<pattern><![CDATA[FUNCTION]]></pattern>
+			</header>
+			<identification.name>	
+				<pattern><![CDATA[FUNCTION]]></pattern>
+				<value><![CDATA[[[:alnum:]_]*]]></value>
+			</identification.name>
+			<body>
+				<begin><![CDATA[[\r\n]]]></begin>
+				<end><![CDATA[END FUNCTION]]></end>
+				<nested>false</nested>
+			</body>
+		</INFORMIX4GLFunction>
+
+		<INFORMIX4GLMenu>
+			<header>
+				<pattern><![CDATA[MENU]]></pattern>
+			</header>
+			<identification.name>	
+				<pattern><![CDATA[MENU]]></pattern>
+				<value><![CDATA[["][[:alnum:]_]*["]]]></value>
+			</identification.name>
+			<body>
+				<begin><![CDATA[[\r\n]]]></begin>
+				<end><![CDATA[END MENU]]></end>
+				<nested>false</nested>
+			</body>
+		</INFORMIX4GLMenu>
+
+		<INFORMIX4GLMain>
+			<header>
+				<pattern><![CDATA[MAIN]]></pattern>
+			</header>
+			<identification.name>	
+				<pattern><![CDATA[MAIN]]></pattern>
+				<value><![CDATA[MAIN]]></value>
+			</identification.name>
+			<body>
+				<begin><![CDATA[[\r\n]]]></begin>
+				<end><![CDATA[END MAIN]]></end>
+				<nested>false</nested>
+			</body>
+		</INFORMIX4GLMain>
+
+		
+		<INFORMIX4GLScreen>
+			<header>
+				<pattern><![CDATA[^SCREEN]]></pattern>
+			</header>
+			<identification.name>	
+				<pattern><![CDATA[SCREEN]]></pattern>
+				<value><![CDATA[SCREEN]]></value>
+			</identification.name>
+			<body>
+				<begin><![CDATA[\r\n]]></begin>
+				<end><![CDATA[^\}]]></end>
+				<nested>false</nested>
+			</body>
+		</INFORMIX4GLScreen>
+
+	</types> -->
+	
+	<!--	<links>
+		
+			 Defines the links between Functions 
+			<callPerformLink>
+				<pattern><![CDATA[CALL]]></pattern>
+				<callee><![CDATA[[[:alnum:]_]+]]></callee>	
+			</callPerformLink>-->
+			
+			
+			<!-- Defines the links between Programs
+			<callLink>
+				<pattern><![CDATA[[$]CAS_UNI_COM[/]]]></pattern>
+				<callee><![CDATA[[a-zA-Z0-9_]+]]></callee>	
+			</callLink>
+			-->			
+			
+			<!-- Include Links
+			<includeLink>
+				<pattern><![CDATA[GLOBALS]]></pattern>
+				<callee><![CDATA[["][^"]+["]]]></callee>	
+			</includeLink>
+			
+
+		</links>-->
+
+</languagePattern>

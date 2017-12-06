@@ -1,0 +1,77 @@
+
+DATABASE life WITHOUT NULL INPUT
+
+SCREEN SIZE 24 BY 80
+{
+  程式代號:                                                   使用者:
+  終端機號:                                                   日  期:
+┌──────────────────────────────┤[pcy|c_desc]├┐
+│保單號碼:[p_no        ]      要保人:[o1_name   ]狀態:[st]受理號碼:[b_no    ]│
+│受理號碼:[a_no    |a_date   ]被保人:[i1_name   ]險種:[plan_code]            │
+│約定項目:[e](1:轉換 2:提領)  效  性: [s](0:有效 1:無效 2:已完成)            │
+│約定日期:[ap_date  ]         頻  率:[fq](0:單次 1:月 3:季 6:半年 12:年)     │
+├──────────────────────────────────────┤
+│ 轉出/提領標的代碼   轉出/提領方式        指定金額     轉出/提領基金筆數    │
+│[i1_code ]          [c|iu1          ][i_amt1         ][k]  [tot_sell] 筆    │
+│[i1_code ]          [c|iu1          ][i_amt1         ][k]                   │
+│[i1_code ]          [c|iu1          ][i_amt1         ][k]                   │
+├──────────────────────────────────────┤
+│ 匯款方式:[p](0:指定  1:ID約定帳號  2:保單約定帳號)                         │
+│ 匯款銀行:[rb ]-[rc  ][r_name                                  ]            │
+│ 匯款帳號:[ra                                ]                              │
+│ 受款人(中):[pc          ]受款人(英):[pe                                   ]│
+│                                                                            │
+└──────────────────────────────────────┘
+                                                         資料筆數:[now]/[tot ]
+}
+
+TABLES chah chad chap polf
+
+ATTRIBUTES
+
+    pcy     = FORMONLY.currency TYPE CHAR, NOENTRY,
+              COLOR = CYAN WHERE pcy = "TWD",
+              COLOR = YELLOW UNDERLINE WHERE pcy != "TWD";
+    c_desc  = FORMONLY.c_desc TYPE CHAR, NOENTRY, COLOR = WHITE;
+
+    p_no    = chah.policy_no, UPSHIFT, AUTONEXT, COLOR = YELLOW UNDERLINE;
+    a_no    = chah.receive_no, UPSHIFT, AUTONEXT, COLOR = CYAN;
+    b_no    = FORMONLY.new_receive_no,UPSHIFT,NOENTRY,COLOR = CYAN;
+    a_date  = FORMONLY.receive_date TYPE CHAR, NOENTRY, COLOR = CYAN;
+    st      = polf.po_sts_code ,NOENTRY ,COLOR = CYAN;
+    o1_name = FORMONLY.o1_name TYPE CHAR, NOENTRY,COLOR = CYAN;
+    i1_name = FORMONLY.i1_name TYPE CHAR, NOENTRY,COLOR = CYAN;
+    plan_code = polf.basic_plan_code ,NOENTRY,COLOR = CYAN;
+    e       = chah.chah_ind ,AUTONEXT,INCLUDE = ( "1" TO "2" ), DEFAULT = "1";
+    s       = chah.active_ind,AUTONEXT, INCLUDE = ( " ","0" TO "2" ), DEFAULT = " ";
+    ap_date = chah.bgn_date ,REQUIRED,AUTONEXT ,PICTURE='###/##/##';
+    fq      = chah.chah_freq,REQUIRED,AUTONEXT;
+
+    i1_code = chad.invs_code  ,AUTONEXT ,UPSHIFT, COLOR = CYAN;
+    c       = chad.chah_sell_type,AUTONEXT, INCLUDE = ( " ","1" TO "2" ), DEFAULT = " ", COLOR = CYAN
+              ,COMMENTS="1.指定金額  2.全部結清";
+    iu1     = FORMONLY.chah_sell_type_desc, NOENTRY, COLOR = CYAN;
+    i_amt1  = chad.invs_ad_amt, COLOR = CYAN,
+              FORMAT = "###########&.&&",AUTONEXT;
+          k = FORMONLY.skip_field ,NOENTRY;              
+    tot_sell = FORMONLY.total_sell_record TYPE INT,NOENTRY, COLOR = CYAN, FORMAT = "#######&";
+    
+    p       = chap.chap_disb_type ,AUTONEXT, INCLUDE = ( "0" TO "2" ), DEFAULT = "0", COLOR = CYAN;
+    
+    rb      = chap.remit_bank, UPSHIFT, AUTONEXT, COLOR = CYAN;
+    rc      = chap.remit_branch, UPSHIFT, AUTONEXT, COLOR = CYAN;
+    r_name  = FORMONLY.bank_name TYPE CHAR, NOENTRY, COLOR = WHITE;
+    ra      = chap.remit_account, UPSHIFT, AUTONEXT, COLOR = CYAN;
+    pc      = chap.payee ,NOENTRY,COLOR = CYAN, AUTONEXT;
+    pe      = chap.payee_e, AUTONEXT;
+        
+
+    now     = FORMONLY.now_record TYPE INTEGER , NOENTRY,COLOR = YELLOW UNDERLINE;
+    tot     = FORMONLY.total_record TYPE INTEGER, NOENTRY,
+              COLOR = YELLOW UNDERLINE;
+
+
+INSTRUCTIONS
+
+    DELIMITERS "  "
+    SCREEN RECORD sa_17m10[ 3 ] ( chad.invs_code THRU chad.invs_ad_amt ,skip_field)    

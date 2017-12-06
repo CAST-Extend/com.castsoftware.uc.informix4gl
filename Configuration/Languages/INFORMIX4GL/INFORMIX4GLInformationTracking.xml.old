@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<InformationTracking id="INFORMIX4GL">
+	
+	<!-- To denote that links cannot occur in Strings -->
+			<searchLinksInString>false</searchLinksInString> 
+	
+	<!--  The search for the link between Functions will be performed within the scope of the whole application  -->
+			<INFORMIX4GLFunction>
+					<callPerformLink>
+						<scope>universalDirectory</scope>
+						<transition>
+									<linkType>includeLink</linkType>
+									<method>recursive</method>
+									<priority>first</priority>
+						</transition>
+					</callPerformLink>
+			</INFORMIX4GLFunction>
+
+	<!--  The Screen is defined thus included into a program  
+			<INFORMIX4GLScreen>
+					<callIncludeLink>
+						<scope>sourceFile</scope>
+						<transition>
+									<linkType>includeLink</linkType>
+									<method>recursive</method>
+									<priority>first</priority>
+						</transition>
+					</callIncludeLink>
+			</INFORMIX4GLScreen>
+			
+	-->
+			
+			<sourceFileLinkSearchDeactivation>
+		
+				<caller>
+					<genericLinks/>
+					<link>callLink</link>
+					<link>callPerformLink</link>
+				
+				</caller>
+				
+				<callee>
+					<genericLinks/>
+					<link>callLink</link>
+					<link>callPerformLink</link>
+				
+				</callee>
+			
+			</sourceFileLinkSearchDeactivation>
+				
+
+</InformationTracking>
+	
+	
+	
+	
