@@ -117,6 +117,8 @@ class Informix4GLSrcFile(cast.analysers.ua.Extension):
                                     link.mark_as_not_sure()
             
                             sql = ""
+                        else:
+                            sql += line
                     
                     if re.match("^[ \t]*GLOBALS[ \t]+", line):
                         globalsSection = cast.analysers.CustomObject()
