@@ -6,7 +6,6 @@ Created on Dec 6, 2017
 import cast_upgrade_1_5_14 # @UnusedImport
 from cast.application import ApplicationLevelExtension, create_link, Bookmark
 import logging
-import os
 
 class ApplicationExtension(ApplicationLevelExtension):
 
@@ -14,13 +13,17 @@ class ApplicationExtension(ApplicationLevelExtension):
         logging.info('Creating links for Informix 4GL...')
         
         previousFileName = ""
-        with open("C:\Temp\Informix4GL_linksFile.txt", 'r') as f:
+        with self.get_intermediate_file("Informix4GL_linksFile.txt") as f:
             for line in f:
                 fileName, programName, linkType, callerShortName, callerFullName, calledShortName, lineNbr, colStart, colEnd = line.split('|')
                 #logging.info("%s to %s" % (linkType, callerFullName))
                 
                 #Get Caller Program                
-                if previousFileName != fileName:                    
+                if previousFileName != fileName:  
+                    for fo in application.get_files(): #TODO Need to filter better here but languages did not work
+                        if fo.get_fullname() == fileName:
+                            fileObj = fo
+                                   
                     callerProgramObj = None
                     for o in application.get_objects_by_name(name=programName):
                         if o.get_fullname().startswith(fileName):
@@ -60,15 +63,12 @@ class ApplicationExtension(ApplicationLevelExtension):
                     logging.warning("%s could not be found in the KB!" % callerFullName)
                 else:
                     if calledObj is None:
-                        logging.warning("%s could not be found in the KB!" % calledShortName)
+                        #The regex catches lots of things that are not functions to begin with...
+                        #no need for it to be a warning
+                        logging.debug("%s could not be found in the KB!" % calledShortName)
                     else:
-                        logging.info("create link from %s to %s" % (callerObj.get_fullname(), calledObj.get_fullname()))
-                        link = create_link('callLink', callerObj, calledObj, Bookmark(fileName, lineNbr, colStart, lineNbr, colEnd))
-                        # TODO saving the bookmark does not work!
-                        #link = create_link('callLink', callerObj, calledObj, Bookmark(fileName, lineNbr, colStart, lineNbr, colEnd))
+                        logging.debug("create link from %s to %s" % (callerObj.get_fullname(), calledObj.get_fullname()))
+                        link = create_link('callLink', callerObj, calledObj, Bookmark(fileObj, lineNbr, colStart, lineNbr, colEnd))
                         link.mark_as_not_sure()
                 
-                previousFileName = fileName
-            f.close()
-        os.remove("C:\Temp\Informix4GL_linksFile.txt")
-        
+                previousFileName = fileName        

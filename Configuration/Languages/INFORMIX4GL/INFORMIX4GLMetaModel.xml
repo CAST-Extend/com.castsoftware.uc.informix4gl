@@ -45,14 +45,9 @@
 	<!-- INFORMIX4GL Project -->
 	<type name="INFORMIX4GLProject" rid="3">
 		<description>INFORMIX4GL Project</description>
-		<inheritedCategory name="identification"/>
-		<inheritedCategory name="project"/>
-		<inheritedCategory name="object"/>
-		<inheritedCategory name="persistent"/>
-<!-- 		<inheritedCategory name="ProjectLifeSpaned"/>-->
+		<inheritedCategory name="UAProject"/>
 		<inheritedCategory name="INFORMIX4GL"/>
-		<inheritedCategory name="APM INFORMIX4GL Module"/>
-		<inheritedCategory name="CastSystemViews"/>
+        <inheritedCategory name="APM INFORMIX4GL Module"/>
 	</type>
 		
 <!-- End of Generic definitions -->
@@ -65,7 +60,6 @@
         <inheritedCategory name="METRICABLE" />
         <inheritedCategory name="INFORMIX4GL" />
         <inheritedCategory name="APM INFORMIX4GL Artifacts" />
-        <attribute name="AUTO_FOLDER_THRESHOLD" intValue="1"/>
         <tree parent="EnlightenINFORMIX4GL" category="EnlightenTree" />
 				
 		<tree parent="INFORMIX4GLProgram" category="amtParentship"/>
@@ -77,7 +71,6 @@
         <inheritedCategory name="METRICABLE" />
         <inheritedCategory name="INFORMIX4GL" />
         <inheritedCategory name="APM INFORMIX4GL Artifacts" />
-        <attribute name="AUTO_FOLDER_THRESHOLD" intValue="1"/>
         <tree parent="EnlightenINFORMIX4GL" category="EnlightenTree" />
 		
 		<tree parent="INFORMIX4GLMain" category="amtParentship"/>
@@ -90,7 +83,6 @@
         <inheritedCategory name="METRICABLE" />
         <inheritedCategory name="INFORMIX4GL" />
         <inheritedCategory name="APM INFORMIX4GL Artifacts" />
-        <attribute name="AUTO_FOLDER_THRESHOLD" intValue="1"/>
         <tree parent="EnlightenINFORMIX4GL" category="EnlightenTree" />
 				
 		<tree parent="sourceFile" category="amtParentship"/>
@@ -102,7 +94,6 @@
         <inheritedCategory name="METRICABLE" />
         <inheritedCategory name="INFORMIX4GL" />
         <inheritedCategory name="APM INFORMIX4GL Artifacts" />
-        <attribute name="AUTO_FOLDER_THRESHOLD" intValue="1"/>
         <tree parent="EnlightenINFORMIX4GL" category="EnlightenTree" />
 				
 		<tree parent="INFORMIX4GLProgram" category="amtParentship"/>
@@ -114,7 +105,6 @@
         <inheritedCategory name="METRICABLE" />
         <inheritedCategory name="INFORMIX4GL" />
         <inheritedCategory name="APM INFORMIX4GL Artifacts" />
-        <attribute name="AUTO_FOLDER_THRESHOLD" intValue="1"/>
         <tree parent="EnlightenINFORMIX4GL" category="EnlightenTree" />
 				
 		<tree parent="sourceFile" category="amtParentship"/>
@@ -126,7 +116,6 @@
         <inheritedCategory name="METRICABLE" />
         <inheritedCategory name="INFORMIX4GL" />
         <inheritedCategory name="APM INFORMIX4GL Artifacts" />
-        <attribute name="AUTO_FOLDER_THRESHOLD" intValue="1"/>
         <tree parent="EnlightenINFORMIX4GL" category="EnlightenTree" />
 				
 		<tree parent="INFORMIX4GLProgram" category="amtParentship"/>
