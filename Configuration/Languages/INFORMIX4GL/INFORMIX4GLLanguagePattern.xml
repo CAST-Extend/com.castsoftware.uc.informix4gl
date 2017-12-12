@@ -16,6 +16,12 @@
 		<multiline>false</multiline>
 	</comment>	
 	
+	<comment>
+		<begin><![CDATA[#]]></begin>
+		<end><![CDATA[\r\n]]></end>
+		<multiline>false</multiline>
+	</comment>		
+<!--  	
 	<string>
 		<begin><![CDATA["]]></begin>
 		<end><![CDATA["]]></end>
@@ -26,7 +32,7 @@
 		<begin><![CDATA[']]></begin>
 		<end><![CDATA[']]></end>
 	</string>
-	
+-->	
 	<keyword>FUNCTION</keyword>
 	<keyword>MAIN</keyword>
 	<keyword>MENU</keyword>

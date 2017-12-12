@@ -4,6 +4,15 @@ from cast.analysers import log, Bookmark, external_link, create_link
 import os
 import re
 
+class LinkObject:
+    def __init__(self, section, calledName, linkType, lineNb, colStart, colEnd):
+        self.section = section
+        self.calledName = calledName
+        self.linkType = linkType
+        self.lineNb = lineNb
+        self.colStart = colStart
+        self.colEnd = colEnd
+
 class Informix4GLSrcFile(cast.analysers.ua.Extension):
     def start_file(self, file):             # Extension point : each file
         filepath=file.get_path()
@@ -47,26 +56,31 @@ class Informix4GLSrcFile(cast.analysers.ua.Extension):
             
             activeSection = None
             
-            sqlLineNbr = 1
+            #sqlLineNbr = 1
             sql = ""
-            statementNbr = 1
+            #statementNbr = 1
             
             inMultilineComment = False
             
             lineNb = 0
+            linkObjects = []
+            functionObjects = []
             with open(file.get_path(), 'r') as f:
                 for line in f:
                     lineNb +=1
                     
                     #Commented-out Line
-                    if re.match("^[ \t]*--", line):
+                    if re.search("^[ \t]*--", line):
                         continue
                     
-                    if re.match("^[ \t]*{", line):
+                    if re.search("^[ \t]*#", line):
+                        continue
+                    
+                    if re.search("^[ \t]*{", line):
                         inMultilineComment = True
                     
                     if inMultilineComment:
-                        if re.match("^[ \t]*}", line) or re.match("}[ \t]*$", line):
+                        if re.search("^[ \t]*}", line) or re.search("}[ \t]*$", line):
                             inMultilineComment = False
                         continue
                     
@@ -77,8 +91,9 @@ class Informix4GLSrcFile(cast.analysers.ua.Extension):
                             calledShortName = matchObj.group(1)
                             colStart = line.find(calledShortName) + 1
                             colEnd = colStart + len(calledShortName)
+                            linkObjects.append(LinkObject(activeSection, calledShortName, 'callLink', lineNb, colStart, colEnd))
                             #log.info("[%d][%d-%d] CALL Link to %s from %s" % (lineNb, colStart, colEnd, calledShortName, callerFullName))
-                            linksFile.write("%s|%s|callLink|%s|%s|%s|%d|%d|%d\n" % (filepath, programObject.name, activeSection.name, activeSection.fullname, calledShortName, lineNb, colStart, colEnd))                               
+                            #linksFile.write("%s|%s|callLink|%s|%s|%s|%d|%d|%d\n" % (filepath, programObject.name, activeSection.name, activeSection.fullname, calledShortName, lineNb, colStart, colEnd))                               
                         
                         #Links to Screens
                         matchObj = re.match('^[ \t]*OPEN FORM[ \t]+[^"]+"([^"]+)', line)
@@ -92,12 +107,13 @@ class Informix4GLSrcFile(cast.analysers.ua.Extension):
                     #Identify embedded SQL    
                     if re.match("^[ \t]*(SELECT|UPDATE|INSERT|DELETE)[ \t]+", line):
                         sql = line
-                        sqlLineNbr = lineNb
+                        #sqlLineNbr = lineNb
                         
                     if sql != "":
                         mO1 = re.match("^[ \t]*$", line)
                         mO2 = re.match("^[ \t]*(CALL|COMMIT|CONTINUE|DISPLAY|ELSE|END|ERROR|EXECUTE|EXIT|FOR|IF|LET|MENU|NEXT|PREPARE|RETURN|ROLLBACK)[ \t]+", line)
                         if mO1 or mO2:
+                            '''
                             sqlquery = cast.analysers.CustomObject()
                             sqlquery.set_name("statement %d" % statementNbr)
                             statementNbr += 1
@@ -106,19 +122,22 @@ class Informix4GLSrcFile(cast.analysers.ua.Extension):
                             sqlquery.save()
                             #log.info("SQL: %s" % sqlquery.fullname)
                             
-                            sqlquery.save_position(Bookmark(file, sqlLineNbr, 1, lineNb-1, len(line))) 
+                            sqlquery.save_position(Bookmark(file, sqlLineNbr, 1, lineNb, len(line))) 
                             
                             sqlquery.save_property('CAST_SQL_MetricableQuery.sqlQuery', sql)
-                            log.debug(' - creating sql links...')
+                            '''
+                            #log.debug(' - creating sql links...')
                             for embedded in external_link.analyse_embedded(sql):
                                 for t in embedded.types:
                                     #log.info(' - link to : %s' % embedded.callee.get_name())
-                                    link = create_link(t, sqlquery, embedded.callee)
+                                    #link = create_link(t, sqlquery, embedded.callee)
+                                    link = create_link(t, activeSection, embedded.callee)                                    
                                     link.mark_as_not_sure()
             
                             sql = ""
                         else:
-                            sql += line
+                            if sql != line:
+                                sql += line
                     
                     if re.match("^[ \t]*GLOBALS[ \t]+", line):
                         globalsSection = cast.analysers.CustomObject()
@@ -139,7 +158,7 @@ class Informix4GLSrcFile(cast.analysers.ua.Extension):
                         globalsSection.save_position(Bookmark(file, lineNb, 1, lineNb, len(line))) 
                     
                     if re.match("^[ \t]*MAIN[ \t]*$", line):
-                        statementNbr = 1
+                        #statementNbr = 1
                         #log.debug("[%d] New MAIN section" % lineNb)
                         if mainSection is not None:
                             log.warning("[%d] a MAIN section is already opened!" % lineNb)
@@ -164,7 +183,7 @@ class Informix4GLSrcFile(cast.analysers.ua.Extension):
                             activeSection = None
                     
                     if re.match("^[ \t]*MENU[ \t]+", line):
-                        statementNbr = 1
+                        #statementNbr = 1
                         #log.debug("[%d] New MENU section" % lineNb)
                         if menuSection is not None:
                             log.warning("[%d] a MENU section is already opened!" % lineNb)
@@ -203,7 +222,7 @@ class Informix4GLSrcFile(cast.analysers.ua.Extension):
                             menuSection = None
                     
                     if re.match("^[ \t]*FUNCTION[ \t]+", line):
-                        statementNbr = 1
+                        #statementNbr = 1
                         #log.debug("[%d] New FUNCTION %s" % (lineNb, name))
                         if functionSection is not None:
                             log.warning("[%d] a FUNCTION section is already opened!" % lineNb)
@@ -225,6 +244,7 @@ class Informix4GLSrcFile(cast.analysers.ua.Extension):
                             #log.info("FUNCTION: %s" % functionSection.fullname)
                             functionSectionLineNbr = lineNb 
                             
+                            functionObjects.append(functionSection)                            
                             activeSection = functionSection
                     
                     if re.match("^[ \t]*END FUNCTION[ \t]*", line):
@@ -236,3 +256,16 @@ class Informix4GLSrcFile(cast.analysers.ua.Extension):
                             activeSection = None
             
             programObject.save_position(Bookmark(file, 1, 1, lineNb, 1))
+            
+            #Create links internal to File
+            for linkObject in linkObjects:
+                linkCreated = False
+                for functionObject in functionObjects:
+                    if linkObject.calledName == functionObject.name:
+                        create_link("callLink", linkObject.section, functionObject, Bookmark(file, linkObject.lineNb, linkObject.colStart, linkObject.lineNb, linkObject.colEnd))
+                        #log.debug("CALL %s to %s" %  (linkObject.section.name, linkObject.calledName))
+                        linkCreated = True
+                        continue
+                if not linkCreated:
+                    linksFile.write("%s|%s|callLink|%s|%s|%s|%d|%d|%d\n" % (filepath, programObject.name, linkObject.section.name, linkObject.section.fullname, linkObject.calledName, linkObject.lineNb, linkObject.colStart, linkObject.colEnd))
+                    #log.info("Pending link to %s" % linkObject.calledName)

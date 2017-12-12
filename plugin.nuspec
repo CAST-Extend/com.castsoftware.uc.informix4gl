@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>com.castsoftware.uc.informix4gl</id>
-    <version>1.0.6</version>
+    <version>1.0.8</version>
     <title>Informix 4GL support</title>
     <authors>User Community</authors>
     <owners>CAST</owners>
@@ -11,7 +11,7 @@
     <iconUrl>https://raw.githubusercontent.com/CAST-Extend/com.castsoftware.uc.informix4gl/master/informix4gl.PNG</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>This Field Extension provides Informix 4GL support</description>
-    <releaseNotes>Bug fix for embedded sql</releaseNotes>
+    <releaseNotes>Removed Nameq queries. Links to DB from functions directly</releaseNotes>
     <tags>CASTUserCommunity Framework CSS Oracle MS CAIP8.0.x CAIP8.1.x CAIP8.2.x Informix4GL techno:DB</tags>
     <dependencies>
       <dependency id="CAIP" version="7.3.6" />
